@@ -2,7 +2,6 @@
 Imports Oracle.ManagedDataAccess.Client
 Public Class Form1
     Dim folderPath As String = ""
-    Dim listKeys As String = ""
     Dim connectionString As String = ""
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -79,6 +78,7 @@ Public Class Form1
           1,2"
     Private Sub selectDataTab1()
         Dim pdfFiles As String() = Directory.GetFiles(folderPath, "*.pdf")
+        Dim listKeys As String = ""
 
         For Each pdfFile As String In pdfFiles
             Dim fileName As String = Path.GetFileNameWithoutExtension(pdfFile)
@@ -103,7 +103,9 @@ Public Class Form1
             DataGridView1.DataSource = resultTable
         End If
     End Sub
-
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        selectDataTab1()
+    End Sub
 #End Region
 #Region "tab_2"
     Dim sql_TAB2 = "
@@ -137,6 +139,10 @@ order by
         Dim resultTable As DataTable = GetData(sql_TAB2)
         DataGridView2.DataSource = Nothing
         DataGridView2.DataSource = resultTable
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        selectDataTab2()
     End Sub
 #End Region
 
