@@ -6,7 +6,7 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not LoadFileini() Then Me.Close()
-
+        Label1.Text = ""
         SelectedIndexChanged()
     End Sub
     'load file ini 
@@ -139,6 +139,8 @@ order by
         Dim resultTable As DataTable = GetData(sql_TAB2)
         DataGridView2.DataSource = Nothing
         DataGridView2.DataSource = resultTable
+        Label1.Text = DataGridView2.Rows.Count.ToString() + " 行"
+
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
