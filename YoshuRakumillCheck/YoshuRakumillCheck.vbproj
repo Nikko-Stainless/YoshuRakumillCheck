@@ -50,6 +50,9 @@
     <ApplicationIcon>menupref.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nikko.Windows">
+      <HintPath>..\..\..\新システム\dll\Nikko.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\新システム\dll\Oracle.ManagedDataAccess.dll</HintPath>

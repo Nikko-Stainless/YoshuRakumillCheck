@@ -1,31 +1,40 @@
 ﻿Imports System.IO
 Imports Oracle.ManagedDataAccess.Client
+Imports Nikko.Windows
+
 Public Class Form1
     Dim folderPath As String = ""
-    Dim connectionString As String = ""
+    Dim connectionStringForYoshu As String = ""
+    Dim connectionStringForNikko As String = ""
+    Dim fileINI = ""
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'load connect Nikko
+        Dim aaaa = New AAAA()
+        connectionStringForNikko = aaaa.GetConnectionString
+        'load connect Yoshu
         If Not LoadFileini() Then Me.Close()
         Label1.Text = ""
+
         SelectedIndexChanged()
     End Sub
     'load file ini 
     Private Function LoadFileini() As Boolean
-        Dim file = Application.StartupPath + "\YoshuRakumillCheck_AppSettings.ini"
+        fileINI = Application.StartupPath + "\YoshuRakumillCheck_AppSettings.ini"
 
-        If Not IO.File.Exists(file) Then Return False
+        If Not IO.File.Exists(fileINI) Then Return False
 
-        Dim lines As String() = IO.File.ReadAllLines(file)
+        Dim lines As String() = IO.File.ReadAllLines(fileINI)
         Dim section As String = ""
 
         For Each line As String In lines
             line = line.Trim()
             If line.StartsWith("[") AndAlso line.EndsWith("]") Then
                 section = line.Trim("["c, "]"c)
-            Else
+            ElseIf Not String.IsNullOrEmpty(line) Then
                 Select Case section
                     Case "ConnectString"
-                        connectionString = line.Trim()
+                        connectionStringForYoshu = line.Trim()
                     Case "RakumillCheckFolder"
                         folderPath = line.Trim()
                 End Select
@@ -34,10 +43,10 @@ Public Class Form1
         Return True
     End Function
     'SQL
-    Private Function GetData(query As String) As DataTable
+    Private Function GetData(query As String, isConnectString As String) As DataTable
         Dim dataTable As New DataTable()
 
-        Using connection As New OracleConnection(connectionString)
+        Using connection As New OracleConnection(isConnectString)
             Using command As New OracleCommand(query, connection)
                 Using adapter As New OracleDataAdapter(command)
                     connection.Open()
@@ -55,6 +64,10 @@ Public Class Form1
                 selectDataTab1()
             Case 1
                 selectDataTab2()
+            Case 2
+                selectDataTab3()
+            Case 3
+                checkFolder()
         End Select
     End Sub
 
@@ -98,7 +111,7 @@ Public Class Form1
 
         If Not String.IsNullOrEmpty(listKeys) Then
             Dim sqlQuery As String = String.Format(sql_TAB1, listKeys)
-            Dim resultTable As DataTable = GetData(sqlQuery)
+            Dim resultTable As DataTable = GetData(sqlQuery, connectionStringForYoshu)
             DataGridView1.DataSource = Nothing
             DataGridView1.DataSource = resultTable
         End If
@@ -136,7 +149,7 @@ order by
   1,2,3"
 
     Private Sub selectDataTab2()
-        Dim resultTable As DataTable = GetData(sql_TAB2)
+        Dim resultTable As DataTable = GetData(sql_TAB2, connectionStringForYoshu)
         DataGridView2.DataSource = Nothing
         DataGridView2.DataSource = resultTable
         Label1.Text = DataGridView2.Rows.Count.ToString() + " 行"
@@ -147,8 +160,133 @@ order by
         selectDataTab2()
     End Sub
 #End Region
+#Region "tab_3"
+    Dim sql_TAB3 = "
+    SELECT distinct
+      s.urikeiyakuno                                        as 豫洲受注NO
+    , S.URIKEIYAKUGYOUNO                                    as 豫洲行NO
+    , s.shukkaymd                                           as 豫洲出荷日
+    , s.sunpou                                              as 豫洲寸法
+    , S.INSUU                                               as 豫洲員数
+    , A.URIKEIYAKUNO                                        as NS受注NO
+    , A.URIKEIYAKUGYOUNO                                    as NS行NO
+    , DECODE(
+        A.MILSHEETFLG
+        , 0
+        , '不要'
+        , 1
+        , '要'
+        , 2
+        , '同時'
+        , 4
+        , '切証'
+        , 5
+        , '切同'
+    )                                                       as MS区分
+    , decode(c.milsheetno, null, '「未」紐付', '紐付済')    as 紐付
+    , decode(a.milsheethakkouflg, 1, '未印刷', 0, '印刷済') as 印刷
+    , C.W_NO
+    , C.C_NO
+FROM
+    NS.URIKEIYAKU_M A
+    , NS.tr_millprt C
+    , NS.rkm_shipping@share4 S
+WHERE
+    s.MILSHEET_YOUHIKBN = '1'
+    AND A.URIKEIYAKUNO = C.URIKEIYAKUNO
+    AND A.URIKEIYAKUGYOUNO = C.URIKEIYAKUGYOUNO
+    AND replace (a.kyakuchuuno, '-', '') = s.urikeiyakuno
+    and s.milsheetno = '9999999'
+    and s.USER_SHUKKASAKI like '日鋼ステンレス%'
+    and NVL(S.SHUKKAYMD, S.SHUKKAYMD2) > '20211001'
+    and a.gaikei = s.gaikei
+    and a.nikuatu = s.nikuatu
+    and a.NAGASA = s.nagasa
+ORDER BY
+    s.urikeiyakuno
+    , S.URIKEIYAKUGYOUNO
+    , S.SUNPOU"
 
+    Private Sub selectDataTab3()
+        Dim resultTable As DataTable = GetData(sql_TAB3, connectionStringForNikko)
+        DataGridView3.DataSource = Nothing
+        DataGridView3.DataSource = resultTable
+    End Sub
 
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        selectDataTab3()
+    End Sub
+#End Region
+#Region "tab_4"
+    Public Class FolderInfo
+        Public Property LinkFolder As String
+        Public Property DisplayText As String
+        Public Property FileFormat As String
+        Public Sub New(link As String, display As String)
+            LinkFolder = link
+            DisplayText = display
+        End Sub
+    End Class
+    Private Sub checkFolder()
+        Try
+            lbBatch.Text = ""
+            Dim folderInfos As New List(Of FolderInfo)()
 
+            ' .iniファイルの読み込み
+            If Not IO.File.Exists(fileINI) Then Return
 
+            Dim lines As String() = File.ReadAllLines(fileINI)
+            Dim isFolderCheckSection As Boolean = False
+            Dim currentLink As String = ""
+
+            For Each line As String In lines
+                line = line.Trim()
+                ' [FolderCheckForTab4] セクションの開始を確認
+                If line.StartsWith("[FolderCheckForTab4]") Then
+                    isFolderCheckSection = True
+                    Continue For
+                    ' セクションの終了を確認
+                ElseIf line.StartsWith("[") AndAlso isFolderCheckSection Then
+                    Exit For ' セクション終了後にループを抜ける
+                End If
+
+                ' セクション内の行を処理
+                If isFolderCheckSection Then
+                    If String.IsNullOrWhiteSpace(line) Then
+                        Continue For ' 空白行をスキップ
+                    End If
+
+                    ' フォルダパスを保存
+                    If String.IsNullOrEmpty(currentLink) Then
+                        currentLink = line
+                    Else
+                        ' FolderInfoオブジェクトをリストに追加
+                        folderInfos.Add(New FolderInfo(currentLink, line))
+                        currentLink = "" ' フォルダパスをリセット
+                    End If
+                End If
+            Next
+
+            ' フォルダのチェックとPDFファイルのカウント
+            For Each folderInfo In folderInfos
+                ' フォルダが存在するか確認
+                If Directory.Exists(folderInfo.LinkFolder) Then
+                    Dim pdfFiles = Directory.GetFiles(folderInfo.LinkFolder, "*.*")
+                    Dim count = pdfFiles.Length
+
+                    ' 結果を表示
+                    lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $"{count} ファイル" + vbNewLine + vbNewLine
+                Else
+                    ' フォルダが見つからない場合のエラーメッセージ
+                    lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + " フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
+                End If
+            Next
+
+        Catch ex As Exception
+            ' エラー処理
+            MessageBox.Show("エラー: " & ex.Message)
+        End Try
+    End Sub
+
+#End Region
 End Class
