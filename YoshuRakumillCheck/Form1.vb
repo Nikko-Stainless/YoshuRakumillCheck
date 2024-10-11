@@ -219,25 +219,29 @@ ORDER BY
 #End Region
 #Region "tab_4"
     Public Class FolderInfo
-        Public Property LinkFolder As String
-        Public Property DisplayText As String
-        Public Property FileFormat As String
-        Public Sub New(link As String, display As String)
+        Public Property LinkFolder As String ' フォルダパス
+        Public Property DisplayText As String ' 表示テキスト
+        Public Property FileFormat As String ' ファイル形式
+
+        ' コンストラクタ
+        Public Sub New(link As String, display As String, format As String)
             LinkFolder = link
             DisplayText = display
+            FileFormat = format
         End Sub
     End Class
     Private Sub checkFolder()
         Try
             lbBatch.Text = ""
             Dim folderInfos As New List(Of FolderInfo)()
-
             ' .iniファイルの読み込み
             If Not IO.File.Exists(fileINI) Then Return
 
             Dim lines As String() = File.ReadAllLines(fileINI)
             Dim isFolderCheckSection As Boolean = False
             Dim currentLink As String = ""
+            Dim currentDisplayText As String = ""
+            Dim currentFileFormat As String = ""
 
             For Each line As String In lines
                 line = line.Trim()
@@ -259,33 +263,58 @@ ORDER BY
                     ' フォルダパスを保存
                     If String.IsNullOrEmpty(currentLink) Then
                         currentLink = line
+                    ElseIf String.IsNullOrEmpty(currentDisplayText) Then
+                        currentDisplayText = line ' 保存する表示テキスト
                     Else
+                        currentFileFormat = line ' 保存するファイルフォーマット
+
                         ' FolderInfoオブジェクトをリストに追加
-                        folderInfos.Add(New FolderInfo(currentLink, line))
-                        currentLink = "" ' フォルダパスをリセット
+                        folderInfos.Add(New FolderInfo(currentLink, currentDisplayText, currentFileFormat))
+
+                        ' リセット
+                        currentLink = ""
+                        currentDisplayText = ""
+                        currentFileFormat = ""
                     End If
                 End If
             Next
 
-            ' フォルダのチェックとPDFファイルのカウント
+            ' フォルダのチェックとファイルのカウント
             For Each folderInfo In folderInfos
                 ' フォルダが存在するか確認
                 If Directory.Exists(folderInfo.LinkFolder) Then
-                    Dim pdfFiles = Directory.GetFiles(folderInfo.LinkFolder, "*.*")
-                    Dim count = pdfFiles.Length
+                    Dim count As Integer = 0
 
-                    ' 結果を表示
-                    lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $"{count} ファイル" + vbNewLine + vbNewLine
+                    ' ファイルのカウント
+                    Dim files = Directory.GetFiles(folderInfo.LinkFolder, folderInfo.FileFormat)
+                    Dim visibleFiles = files.Where(Function(f) (File.GetAttributes(f) And FileAttributes.Hidden) = 0).ToArray()
+                    count += visibleFiles.Length
+
+                    ' フォルダもカウントする場合 (FileFormat = "*.*")
+                    If folderInfo.FileFormat = "*.*" Then
+                        Dim directories = Directory.GetDirectories(folderInfo.LinkFolder)
+                        Dim visibleDirectories = directories.Where(Function(d) (File.GetAttributes(d) And FileAttributes.Hidden) = 0).ToArray()
+                        count += visibleDirectories.Length
+                    End If
+
+                    If count > 0 Then
+                        ' 結果を表示
+                        lbBatch.Text += $"{folderInfo.DisplayText}:" + vbNewLine + $" {count} ファイル/フォルダ" + vbNewLine + vbNewLine
+                    End If
                 Else
                     ' フォルダが見つからない場合のエラーメッセージ
-                    lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + " フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
+                    lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $" フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
                 End If
             Next
-
         Catch ex As Exception
             ' エラー処理
             MessageBox.Show("エラー: " & ex.Message)
         End Try
+    End Sub
+
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        checkFolder()
     End Sub
 
 #End Region

@@ -39,6 +39,7 @@ Partial Class Form1
         Me.DataGridView3 = New System.Windows.Forms.DataGridView()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.lbBatch = New System.Windows.Forms.Label()
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -178,7 +179,7 @@ Partial Class Form1
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage3.Size = New System.Drawing.Size(1088, 704)
         Me.TabPage3.TabIndex = 2
-        Me.TabPage3.Text = "ラクミル_NS仕入未紐付"
+        Me.TabPage3.Text = "楽ミルNS仕入出力"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
         'Button3
@@ -217,6 +218,7 @@ Partial Class Form1
         'TabPage4
         '
         Me.TabPage4.BackColor = System.Drawing.Color.White
+        Me.TabPage4.Controls.Add(Me.Button4)
         Me.TabPage4.Controls.Add(Me.lbBatch)
         Me.TabPage4.Location = New System.Drawing.Point(4, 32)
         Me.TabPage4.Name = "TabPage4"
@@ -230,11 +232,24 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lbBatch.AutoSize = True
-        Me.lbBatch.Location = New System.Drawing.Point(7, 12)
+        Me.lbBatch.Location = New System.Drawing.Point(7, 45)
         Me.lbBatch.Name = "lbBatch"
         Me.lbBatch.Size = New System.Drawing.Size(58, 23)
         Me.lbBatch.TabIndex = 0
         Me.lbBatch.Text = "Label2"
+        '
+        'Button4
+        '
+        Me.Button4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button4.BackColor = System.Drawing.Color.Aquamarine
+        Me.Button4.Font = New System.Drawing.Font("メイリオ", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Button4.ForeColor = System.Drawing.Color.Black
+        Me.Button4.Location = New System.Drawing.Point(950, 3)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(138, 38)
+        Me.Button4.TabIndex = 2
+        Me.Button4.Text = "再読込"
+        Me.Button4.UseVisualStyleBackColor = False
         '
         'Form1
         '
@@ -274,4 +289,5 @@ Partial Class Form1
     Friend WithEvents DataGridView3 As DataGridView
     Friend WithEvents TabPage4 As TabPage
     Friend WithEvents lbBatch As Label
+    Friend WithEvents Button4 As Button
 End Class
