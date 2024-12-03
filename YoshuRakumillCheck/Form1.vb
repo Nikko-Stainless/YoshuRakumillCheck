@@ -309,7 +309,8 @@ ORDER BY
                 Else
                     ' フォルダが見つからない場合のエラーメッセージ
                     lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $" フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
-                    MessageBox.Show(lbBatch.Text)
+                    MessageBox.Show($"{folderInfo.DisplayText}: フォルダが見つかりませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
                 End If
             Next
         Catch ex As Exception
