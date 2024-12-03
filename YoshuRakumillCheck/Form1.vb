@@ -285,13 +285,18 @@ ORDER BY
                 If Directory.Exists(folderInfo.LinkFolder) Then
                     Dim count As Integer = 0
 
-                    ' ファイルのカウント
-                    Dim files = Directory.GetFiles(folderInfo.LinkFolder, folderInfo.FileFormat)
-                    Dim visibleFiles = files.Where(Function(f) (File.GetAttributes(f) And FileAttributes.Hidden) = 0).ToArray()
-                    count += visibleFiles.Length
+                    ' 分割して複数のファイルフォーマットを取得
+                    Dim formats As String() = folderInfo.FileFormat.Split(","c)
+                    For Each format As String In formats
+                        format = format.Trim() ' 不要な空白を削除
+                        ' ファイルのカウント
+                        Dim files = Directory.GetFiles(folderInfo.LinkFolder, format)
+                        Dim visibleFiles = files.Where(Function(f) (File.GetAttributes(f) And FileAttributes.Hidden) = 0).ToArray()
+                        count += visibleFiles.Length
+                    Next
 
                     ' フォルダもカウントする場合 (FileFormat = "*.*")
-                    If folderInfo.FileFormat = "*.*" Then
+                    If folderInfo.FileFormat.Contains("*.*") Then
                         Dim directories = Directory.GetDirectories(folderInfo.LinkFolder)
                         Dim visibleDirectories = directories.Where(Function(d) (File.GetAttributes(d) And FileAttributes.Hidden) = 0).ToArray()
                         count += visibleDirectories.Length
@@ -304,6 +309,7 @@ ORDER BY
                 Else
                     ' フォルダが見つからない場合のエラーメッセージ
                     lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $" フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
+                    MessageBox.Show(lbBatch.Text)
                 End If
             Next
         Catch ex As Exception
@@ -311,8 +317,6 @@ ORDER BY
             MessageBox.Show("エラー: " & ex.Message)
         End Try
     End Sub
-
-
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         checkFolder()
     End Sub
