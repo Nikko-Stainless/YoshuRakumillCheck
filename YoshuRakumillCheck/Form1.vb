@@ -8,11 +8,12 @@ Public Class Form1
     Dim connectionStringForYoshu As String = ""
     Dim connectionStringForNikko As String = ""
     Dim fileINI = ""
+    Dim fileINI_for_Person = ""
     Private Const HOST_NAME = "27.34.144.88"
     Private Const PORT = 110
     Private MAIL_ADDRESS = "milko@nikko-sus.co.jp"
     Private MAIL_PASSWORD = "nikko-sus2"
-    Private TEXT_MEMO1 = "okuisakicd||a.atukaitencd||a.todokesakicd=b.tokuisakicd||b.atukaitencd||b.todokesakicd) and a.tokuisakicd<>'99999' and a.bikou='TPA';"
+    Private TEXT_MEMO1 = ""
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -21,9 +22,12 @@ Public Class Form1
         connectionStringForNikko = aaaa.GetConnectionString
         'load connect Yoshu
         If Not LoadFileini() Then Me.Close()
+        If Not LoadFileForPerson_ini() Then
+            MessageBox.Show("個人別設定のイニシャルファイル無し")
+        End If
         Label1.Text = ""
         RichTextBox1.Text = TEXT_MEMO1
-        TabControl1.SelectedIndex = 3
+        tabControl1.SelectedIndex = 3
         SelectedIndexChanged()
     End Sub
     'load file ini 
@@ -50,6 +54,14 @@ Public Class Form1
         Next
         Return True
     End Function
+    Private Function LoadFileForPerson_ini() As Boolean
+        fileINI_for_Person = "C:\Centura\Check_FolderSettings.ini"
+        If Not IO.File.Exists(fileINI_for_Person) Then
+            fileINI_for_Person = Application.StartupPath + "\Check_FolderSettings.ini"
+            If Not IO.File.Exists(fileINI_for_Person) Then Return False
+        End If
+        Return True
+    End Function
     'SQL
     Private Function GetData(query As String, isConnectString As String) As DataTable
         Dim dataTable As New DataTable()
@@ -65,8 +77,8 @@ Public Class Form1
 
         Return dataTable
     End Function
-    Private Sub SelectedIndexChanged() Handles TabControl1.SelectedIndexChanged
-        Dim selectedIndex As Integer = TabControl1.SelectedIndex
+    Private Sub SelectedIndexChanged() Handles tabControl1.SelectedIndexChanged
+        Dim selectedIndex As Integer = tabControl1.SelectedIndex
         Select Case selectedIndex
             Case 0
                 selectDataTab1()
@@ -75,9 +87,12 @@ Public Class Form1
             Case 2
                 selectDataTab3()
             Case 3
-                checkFolder()
+                checkFolder(lbBatch, fileINI)
             Case 4
                 selectDataTab5()
+            Case 5
+                checkFolder(LabelForPerson, fileINI_for_Person)
+
         End Select
     End Sub
 
@@ -103,38 +118,46 @@ Public Class Form1
           a.makercd = b.makercd(+) AND a.urikeiyakuno=c.first8chars --and a.milsheetno<>8888888-- a.URIKEIYAKUNO IN ({0}) 
    ORDER BY 
           a.URIKEIYAKUNO, a.URIKEIYAKUGYOUNO"
+    Dim sql_TAB1_2 = "
+            SELECT 
+            s.SID,
+            s.SERIAL#,
+            s.USERNAME,
+            s.MACHINE,
+            s.STATUS,
+            o.OBJECT_NAME,
+            o.OBJECT_TYPE,
+            o.OWNER,
+            l.ORACLE_USERNAME,
+            l.OS_USER_NAME,PREV_EXEC_START
+
+        FROM   V$LOCKED_OBJECT l
+        LEFT JOIN DBA_OBJECTS o ON l.OBJECT_ID = o.OBJECT_ID
+        LEFT JOIN V$SESSION s ON l.SESSION_ID = s.SID
+        ORDER BY s.SID, o.OBJECT_NAME"
     Private Sub selectDataTab1()
-        'Dim pdfFiles As String() = Directory.GetFiles(folderPath, "*.pdf")
-        'Dim listKeys As String = ""
 
-        'For Each pdfFile As String In pdfFiles
-        '    Dim fileName As String = Path.GetFileNameWithoutExtension(pdfFile)
-        '    If fileName.Length >= 8 Then
-        '        Dim first8Chars As String = fileName.Substring(0, 8)
-        '        ' ファイル名の最初の8文字を取得
-        '        If IsNumeric(first8Chars) Then
-        '            ' 最初の8文字が数字であるかを確認
-        '            listKeys = listKeys + "'" + first8Chars + "',"
-        '        End If
-        '    End If
-        'Next
-
-        'If listKeys.Length > 0 Then
-        '    listKeys = listKeys.TrimEnd(","c)
-        'End If
-
-        'If Not String.IsNullOrEmpty(listKeys) Then
-        '    Dim sqlQuery As String = String.Format(sql_TAB1, listKeys)
-        '    Dim resultTable As DataTable = GetData(sqlQuery, connectionStringForYoshu)
-        '    DataGridView1.DataSource = Nothing
-        '    DataGridView1.DataSource = resultTable
-        'End If
         SavePdfFileInfoToOracle()
-
 
         Dim resultTable As DataTable = GetData(sql_TAB1, connectionStringForYoshu)
         DataGridView1.DataSource = Nothing
         DataGridView1.DataSource = resultTable
+        resultTable = GetData(sql_TAB1_2, connectionStringForYoshu)
+        DataGridView4.DataSource = Nothing
+        DataGridView4.Visible = (resultTable IsNot Nothing AndAlso resultTable.Rows.Count > 0)
+
+        If resultTable IsNot Nothing AndAlso resultTable.Rows.Count > 0 Then
+            ' データがある場合のみ表示
+            DataGridView4.DataSource = resultTable
+            DataGridView4.Refresh()
+
+            MessageBox.Show("Data登録待ち状態が発生しています" + vbNewLine + " しばらく経ってから登録してください")
+        Else
+            ' データがない場合は何もしない（または非表示にするなども可能）
+            ' 例: DataGridView4.Visible = False
+            'MessageBox.Show("Data登録待ち状態が発生しています" + vbNewLine + " しばらく経ってから登録してください")
+
+        End If
     End Sub
 
 
@@ -306,9 +329,9 @@ ORDER BY
             FileFormat = format
         End Sub
     End Class
-    Private Sub checkFolder()
+    Private Sub checkFolder(infoLabel As Label, fileINI As String)
         Try
-            lbBatch.Text = ""
+            infoLabel.Text = ""
             Dim folderInfos As New List(Of FolderInfo)()
             ' .iniファイルの読み込み
             If Not IO.File.Exists(fileINI) Then Return
@@ -384,32 +407,36 @@ ORDER BY
 
                     If count > 0 Then
                         ' 結果を表示
-                        lbBatch.Text += $"{folderInfo.DisplayText}:" + vbNewLine
-                        lbBatch.Text += $" {count} ファイル/フォルダ" + vbNewLine
+                        infoLabel.Text += $"{folderInfo.DisplayText}:" + vbNewLine
+                        infoLabel.Text += $" {count} ファイル/フォルダ" + vbNewLine
 
                         If folderInfo.DisplayText.Substring(0, 1) = "★" Then
                             ' 代表ファイル名を追加表示
                             If representativeFiles.Any() Then
-                                lbBatch.Text += $"  ⇒ 代表ファイル: {String.Join(", ", representativeFiles.Select(Function(f) Path.GetFileName(f)))}" + vbNewLine
+                                infoLabel.Text += $"  ⇒ 代表ファイル: {String.Join(", ", representativeFiles.Select(Function(f) Path.GetFileName(f)))}" + vbNewLine
                             End If
                         End If
 
-                        lbBatch.Text += vbNewLine
+                        infoLabel.Text += vbNewLine
                     End If
                 Else
                     ' フォルダが見つからない場合のエラーメッセージ
                     lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $" フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
                     MessageBox.Show($"{folderInfo.DisplayText}: フォルダが見つかりませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
+                'test一つだけ表示
+                Button11.Text = folderInfo.LinkFolder
             Next
+
 
         Catch ex As Exception
             ' エラー処理
             MessageBox.Show("エラー: " & ex.Message)
         End Try
     End Sub
+
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        checkFolder()
+        checkFolder(lbBatch, fileINI)
     End Sub
 
     Private Sub CheckMailCount()
@@ -528,6 +555,11 @@ ORDER BY
 
     Private Sub Button11_Click(sender As Object, e As EventArgs)
         SavePdfFileInfoToOracle()
+    End Sub
+
+    Private Sub Button11_Click_1(sender As Object, e As EventArgs) Handles Button11.Click
+        Dim folder = sender.text
+        Process.Start(folder)
     End Sub
 End Class
 

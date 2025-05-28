@@ -22,14 +22,15 @@ Partial Class Form1
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.tabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
@@ -62,7 +63,11 @@ Partial Class Form1
         Me.DataGridView5_2 = New System.Windows.Forms.DataGridView()
         Me.DataGridView5_1 = New System.Windows.Forms.DataGridView()
         Me.Button5 = New System.Windows.Forms.Button()
-        Me.TabControl1.SuspendLayout()
+        Me.個人別設定 = New System.Windows.Forms.TabPage()
+        Me.Button11 = New System.Windows.Forms.Button()
+        Me.LabelForPerson = New System.Windows.Forms.Label()
+        Me.DataGridView4 = New System.Windows.Forms.DataGridView()
+        Me.tabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage2.SuspendLayout()
@@ -74,27 +79,31 @@ Partial Class Form1
         CType(Me.DataGridView5_3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView5_2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView5_1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.個人別設定.SuspendLayout()
+        CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'TabControl1
+        'tabControl1
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.tabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Controls.Add(Me.TabPage5)
-        Me.TabControl1.Location = New System.Drawing.Point(1, 2)
-        Me.TabControl1.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1096, 740)
-        Me.TabControl1.TabIndex = 0
+        Me.tabControl1.Controls.Add(Me.TabPage1)
+        Me.tabControl1.Controls.Add(Me.TabPage2)
+        Me.tabControl1.Controls.Add(Me.TabPage3)
+        Me.tabControl1.Controls.Add(Me.TabPage4)
+        Me.tabControl1.Controls.Add(Me.TabPage5)
+        Me.tabControl1.Controls.Add(Me.個人別設定)
+        Me.tabControl1.Location = New System.Drawing.Point(1, 2)
+        Me.tabControl1.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.tabControl1.Name = "tabControl1"
+        Me.tabControl1.SelectedIndex = 0
+        Me.tabControl1.Size = New System.Drawing.Size(1096, 740)
+        Me.tabControl1.TabIndex = 0
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.DataGridView4)
         Me.TabPage1.Controls.Add(Me.Button1)
         Me.TabPage1.Controls.Add(Me.DataGridView1)
         Me.TabPage1.Location = New System.Drawing.Point(4, 32)
@@ -125,18 +134,19 @@ Partial Class Form1
         Me.DataGridView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridView1.BackgroundColor = System.Drawing.SystemColors.Control
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(4, 40)
+        Me.DataGridView1.Location = New System.Drawing.Point(4, 73)
         Me.DataGridView1.Margin = New System.Windows.Forms.Padding(3, 5, 3, 5)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.RowHeadersWidth = 32
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView1.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridView1.RowTemplate.Height = 21
-        Me.DataGridView1.Size = New System.Drawing.Size(1084, 664)
+        Me.DataGridView1.Size = New System.Drawing.Size(1084, 631)
         Me.DataGridView1.TabIndex = 0
         '
         'TabPage2
@@ -191,8 +201,8 @@ Partial Class Form1
         Me.DataGridView2.ReadOnly = True
         Me.DataGridView2.RowHeadersVisible = False
         Me.DataGridView2.RowHeadersWidth = 35
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView2.RowsDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView2.RowsDefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridView2.RowTemplate.Height = 21
         Me.DataGridView2.Size = New System.Drawing.Size(1084, 662)
         Me.DataGridView2.TabIndex = 1
@@ -236,8 +246,8 @@ Partial Class Form1
         Me.DataGridView3.ReadOnly = True
         Me.DataGridView3.RowHeadersVisible = False
         Me.DataGridView3.RowHeadersWidth = 32
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView3.RowsDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView3.RowsDefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridView3.RowTemplate.Height = 21
         Me.DataGridView3.Size = New System.Drawing.Size(1084, 664)
         Me.DataGridView3.TabIndex = 2
@@ -386,8 +396,8 @@ Partial Class Form1
         Me.DataGridView5_3.ReadOnly = True
         Me.DataGridView5_3.RowHeadersVisible = False
         Me.DataGridView5_3.RowHeadersWidth = 32
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView5_3.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView5_3.RowsDefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridView5_3.RowTemplate.Height = 21
         Me.DataGridView5_3.Size = New System.Drawing.Size(624, 94)
         Me.DataGridView5_3.TabIndex = 13
@@ -468,8 +478,8 @@ Partial Class Form1
         Me.DataGridView5_2.ReadOnly = True
         Me.DataGridView5_2.RowHeadersVisible = False
         Me.DataGridView5_2.RowHeadersWidth = 32
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView5_2.RowsDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView5_2.RowsDefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridView5_2.RowTemplate.Height = 21
         Me.DataGridView5_2.Size = New System.Drawing.Size(617, 94)
         Me.DataGridView5_2.TabIndex = 5
@@ -488,8 +498,8 @@ Partial Class Form1
         Me.DataGridView5_1.ReadOnly = True
         Me.DataGridView5_1.RowHeadersVisible = False
         Me.DataGridView5_1.RowHeadersWidth = 32
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.DataGridView5_1.RowsDefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("メイリオ", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView5_1.RowsDefaultCellStyle = DataGridViewCellStyle7
         Me.DataGridView5_1.RowTemplate.Height = 21
         Me.DataGridView5_1.Size = New System.Drawing.Size(613, 152)
         Me.DataGridView5_1.TabIndex = 4
@@ -507,18 +517,73 @@ Partial Class Form1
         Me.Button5.Text = "再読込"
         Me.Button5.UseVisualStyleBackColor = False
         '
+        '個人別設定
+        '
+        Me.個人別設定.Controls.Add(Me.Button11)
+        Me.個人別設定.Controls.Add(Me.LabelForPerson)
+        Me.個人別設定.Location = New System.Drawing.Point(4, 32)
+        Me.個人別設定.Name = "個人別設定"
+        Me.個人別設定.Padding = New System.Windows.Forms.Padding(3)
+        Me.個人別設定.Size = New System.Drawing.Size(1088, 704)
+        Me.個人別設定.TabIndex = 5
+        Me.個人別設定.Text = "個人別設定"
+        Me.個人別設定.UseVisualStyleBackColor = True
+        '
+        'Button11
+        '
+        Me.Button11.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button11.BackColor = System.Drawing.Color.Thistle
+        Me.Button11.Font = New System.Drawing.Font("メイリオ", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Button11.ForeColor = System.Drawing.Color.Black
+        Me.Button11.Location = New System.Drawing.Point(480, 608)
+        Me.Button11.Name = "Button11"
+        Me.Button11.Size = New System.Drawing.Size(558, 38)
+        Me.Button11.TabIndex = 4
+        Me.Button11.Text = "ラクミル画像"
+        Me.Button11.UseVisualStyleBackColor = False
+        '
+        'LabelForPerson
+        '
+        Me.LabelForPerson.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LabelForPerson.AutoSize = True
+        Me.LabelForPerson.Location = New System.Drawing.Point(20, 44)
+        Me.LabelForPerson.Name = "LabelForPerson"
+        Me.LabelForPerson.Size = New System.Drawing.Size(58, 23)
+        Me.LabelForPerson.TabIndex = 1
+        Me.LabelForPerson.Text = "Label2"
+        '
+        'DataGridView4
+        '
+        Me.DataGridView4.AllowUserToAddRows = False
+        Me.DataGridView4.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridView4.BackgroundColor = System.Drawing.SystemColors.Control
+        Me.DataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView4.Location = New System.Drawing.Point(7, 0)
+        Me.DataGridView4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 5)
+        Me.DataGridView4.Name = "DataGridView4"
+        Me.DataGridView4.ReadOnly = True
+        Me.DataGridView4.RowHeadersVisible = False
+        Me.DataGridView4.RowHeadersWidth = 32
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("メイリオ", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.DataGridView4.RowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.DataGridView4.RowTemplate.Height = 21
+        Me.DataGridView4.Size = New System.Drawing.Size(943, 69)
+        Me.DataGridView4.TabIndex = 2
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 23.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1098, 743)
-        Me.Controls.Add(Me.TabControl1)
+        Me.Controls.Add(Me.tabControl1)
         Me.Font = New System.Drawing.Font("メイリオ", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
         Me.Name = "Form1"
         Me.Text = "豫洲ラクミルチェック+状況確認"
-        Me.TabControl1.ResumeLayout(False)
+        Me.tabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage2.ResumeLayout(False)
@@ -533,11 +598,14 @@ Partial Class Form1
         CType(Me.DataGridView5_3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView5_2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView5_1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.個人別設定.ResumeLayout(False)
+        Me.個人別設定.PerformLayout()
+        CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
 
-    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents tabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents TabPage2 As TabPage
@@ -570,4 +638,8 @@ Partial Class Form1
     Friend WithEvents Label7 As Label
     Friend WithEvents Button10 As Button
     Friend WithEvents ミル子Label As Label
+    Friend WithEvents 個人別設定 As TabPage
+    Friend WithEvents LabelForPerson As Label
+    Friend WithEvents Button11 As Button
+    Friend WithEvents DataGridView4 As DataGridView
 End Class
