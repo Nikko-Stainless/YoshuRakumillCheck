@@ -29,6 +29,11 @@ Public Class Form1
         RichTextBox1.Text = TEXT_MEMO1
         tabControl1.SelectedIndex = 3
         SelectedIndexChanged()
+        'tab出ないように
+        Dim tantou = aaaa.tantousha
+        If tantou <> 22 Then
+            TabPage5.Parent = Nothing
+        End If
     End Sub
     'load file ini 
     Private Function LoadFileini() As Boolean
@@ -90,9 +95,8 @@ Public Class Form1
                 checkFolder(lbBatch, fileINI)
             Case 4
                 selectDataTab5()
-            Case 5
-                checkFolder(LabelForPerson, fileINI_for_Person)
-
+                'Case 5
+                '    checkFolder(LabelForPerson, fileINI_for_Person)
         End Select
     End Sub
 
@@ -424,8 +428,8 @@ ORDER BY
                     lbBatch.Text += $"{folderInfo.DisplayText}: " + vbNewLine + $" フォルダが見つかりませんでした。" + vbNewLine + vbNewLine
                     MessageBox.Show($"{folderInfo.DisplayText}: フォルダが見つかりませんでした。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
-                'test一つだけ表示
-                Button11.Text = folderInfo.LinkFolder
+                ''test一つだけ表示
+                'Button11.Text = folderInfo.LinkFolder
             Next
 
 
@@ -557,7 +561,7 @@ ORDER BY
         SavePdfFileInfoToOracle()
     End Sub
 
-    Private Sub Button11_Click_1(sender As Object, e As EventArgs) Handles Button11.Click
+    Private Sub Button11_Click_1(sender As Object, e As EventArgs)
         Dim folder = sender.text
         Process.Start(folder)
     End Sub
